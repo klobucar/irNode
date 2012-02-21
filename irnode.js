@@ -2,14 +2,22 @@ console.log('Starting irNode');
 
 var irc = require('irc'),
     Rdio = require('./rdio'),
-    cred = require('./rdio_cred');
-var client = new irc.Client('dot.cclub', 'irNode', {
-      channels: ['#geekboy']
-});
+    cred = require('./rdio_cred'),
+    myBot = {
+      'server': 'dot.cclub', 
+      'nick': 'irNode', 
+      'channel': '#geekboy' 
+    },
+    client = new irc.Client(myBot.server, myBot.nick, {
+      channels: [myBot.channel],
+      userName: myBot.nick,
+      realName: 'Hey A-bot'
+    });
+
 
 var rdio = new Rdio([cred.RDIO_CONSUMER_KEY, cred.RDIO_CONSUMER_SECRET]);
 
-client.join('#geekboy');
+client.join(myBot.channel);
 
 function message_parsing(from, to, message) {
   var matching = message.match(/\bhttp\:\/\/rd\.io\/x\/([0-9\w\-]+)\b/);
@@ -35,7 +43,7 @@ function rdio_object(url) {
             } else {
               newMessage += 'Uknown Type: ' + result.type;
             }
-            client.say('#geekboy', newMessage);
+            client.say(myBot.channel, newMessage);
   });
 }
 
@@ -43,4 +51,4 @@ client.addListener('message', function(from, to, message){
   message_parsing(from, to, message);
 });
 
-client.say('#geekboy', "Hi everybody!");
+client.say(myBot.channel, "Hi everybody!");
