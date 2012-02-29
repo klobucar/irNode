@@ -31,7 +31,7 @@ function rdio_object(url) {
             var result = data.result,
                 newMessage = 'URL info - ';
             if (result.type === 't') { //Track
-              newMessage += 'Track: "' + result.name + '"' + ' Artist: "' + result.artist +  '"' + 'Album: "' + result.album +  '"' ;
+              newMessage += 'Track: "' + result.name + '"' + ' Artist: "' + result.artist +  '"' + ' Album: "' + result.album +  '"' ;
             } else if (result.type === 'a') { //Artist
               newMessage += 'Album: "' + result.name +  '"' + ' Artist: "' + result.artist + '" ' + result.length + ' tracks';
             } else if (result.type === 'p') { //Playlist
