@@ -1,6 +1,8 @@
 console.log('Starting irNode');
 
 var irc = require('irc'),
+    request = require('request')
+    querystring = require('querystring'),
     Rdio = require('./rdio'),
     cred = require('./rdio_cred'),
     myBot = {
@@ -20,13 +22,16 @@ var rdio = new Rdio([cred.RDIO_CONSUMER_KEY, cred.RDIO_CONSUMER_SECRET]);
 client.join(myBot.channel);
 
 function message_parsing(from, to, message) {
-  var matching = message.match(/\bhttp\:\/\/rd\.io\/x\/([0-9\w\-]+)\b/);
-  if (matching) {
-    rdio_object(matching[1]);
-  } 
+  var rdioText = message.match(/\bhttp\:\/\/rd\.io\/x\/([0-9\w\-]+)\b/),
+      acText = message.match(/^!ac[ \t]+([0-9]{3})/);
+  if (rdioText) {
+    rdioObject(rdioText[1]);
+  } else if (acText) {
+    acLookup(acText[1]); 
+  }
 }
 
-function rdio_object(url) {
+function rdioObject(url) {
   rdio.call('getObjectFromShortCode', {'short_code': url}, function(err, data){
             var result = data.result,
                 newMessage = 'URL info - ';
@@ -46,7 +51,28 @@ function rdio_object(url) {
             client.say(myBot.channel, newMessage);
   });
 }
-
+function acLookup(areaCode) {
+  var qs = querystring.stringify({
+      'npa': areaCode,
+      'tracking_email': 'exmaple@example.com',
+      'tracking_url': 'http://github.com/klobuccar/irNode'  
+      }),    
+    newMessage = 'Area Code is in: ',
+    jsonResponse,
+    httpString = "http://www.allareacodes.com/api/1.0/api.json?";
+  
+  httpString += qs 
+  request(httpString, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      jsonResponse = JSON.parse(body);
+      var areaCodes = jsonResponse.area_codes
+      if (areaCodes) { 
+        newMessage += areaCodes[0].state;
+        client.say(myBot.channel, newMessage);
+      }
+    }
+  });
+}
 client.addListener('message', function(from, to, message){
   message_parsing(from, to, message);
 });
