@@ -55,7 +55,7 @@ function acLookup(areaCode) {
   var qs = querystring.stringify({
       'npa': areaCode,
       'tracking_email': 'exmaple@example.com',
-      'tracking_url': 'http://github.com/klobuccar/irNode'  
+      'tracking_url': 'http://github.com/klobucar/irNode'  
       }),    
     newMessage = 'Area Code is in: ',
     jsonResponse,
