@@ -35,23 +35,23 @@ function message_parsing(from, to, message) {
 }
 
 function rdioObject(url) {
-  rdio.call('getObjectFromShortCode', {'short_code': url}, function(err, data){
-            var result = data.result,
-                newMessage = 'URL info - ';
-            if (result.type === 't') { //Track
-              newMessage += 'Track: "' + result.name + '"' + ' Artist: "' + result.artist +  '"' + ' Album: "' + result.album +  '"' ;
-            } else if (result.type === 'a') { //Artist
-              newMessage += 'Album: "' + result.name +  '"' + ' Artist: "' + result.artist + '" ' + result.length + ' tracks';
-            } else if (result.type === 'p') { //Playlist
-              newMessage += 'Playlist: "' + result.name + '"' + ' By: "' + result.owner + '"';
-            } else if (result.type === 'r') { //Album
-              newMessage += 'Artist: "' + result.artist + '"'; 
-            } else if (result.type === 's') { //Person 
-              newMessage += 'Profile Name: "' + result.firstName + ' ' + result.lastName;
-            } else {
-              newMessage += 'Uknown Type: ' + result.type;
-            }
-            client.say(myBot.channel, newMessage);
+  rdio.call('getObjectFromShortCode', {'short_code': url}, function(err, data) {
+    var result = data.result,
+        newMessage = 'URL info - ';
+    if (result.type === 't') { //Track
+      newMessage += 'Track: "' + result.name + '"' + ' Artist: "' + result.artist +  '"' + ' Album: "' + result.album +  '"' ;
+    } else if (result.type === 'a') { //Artist
+      newMessage += 'Album: "' + result.name +  '"' + ' Artist: "' + result.artist + '" ' + result.length + ' tracks';
+    } else if (result.type === 'p') { //Playlist
+      newMessage += 'Playlist: "' + result.name + '"' + ' By: "' + result.owner + '"';
+    } else if (result.type === 'r') { //Album
+      newMessage += 'Artist: "' + result.artist + '"'; 
+    } else if (result.type === 's') { //Person 
+      newMessage += 'Profile Name: "' + result.firstName + ' ' + result.lastName;
+    } else {
+      newMessage += 'Uknown Type: ' + result.type;
+    }
+      client.say(myBot.channel, newMessage);
   });
 }
 function acLookup(areaCode) {
@@ -61,14 +61,13 @@ function acLookup(areaCode) {
       'tracking_url': 'http://github.com/klobucar/irNode'  
       }),    
     newMessage = 'Area Code is in: ',
-    jsonResponse,
     httpString = "http://www.allareacodes.com/api/1.0/api.json?";
   
   httpString += qs 
   request(httpString, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      jsonResponse = JSON.parse(body);
-      var areaCodes = jsonResponse.area_codes
+      var jsonResponse = JSON.parse(body),
+        areaCodes = jsonResponse.area_codes;
       if (areaCodes) { 
         newMessage += areaCodes[0].state;
         client.say(myBot.channel, newMessage);
