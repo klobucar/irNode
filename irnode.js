@@ -1,7 +1,7 @@
 console.log('Starting irNode');
 
 var irc = require('irc'),
-    request = require('request')
+    request = require('request'),
     querystring = require('querystring'),
     Rdio = require('./rdio'),
     cred = require('./rdio_cred'),
@@ -23,11 +23,14 @@ client.join(myBot.channel);
 
 function message_parsing(from, to, message) {
   var rdioText = message.match(/\bhttp\:\/\/rd\.io\/x\/([0-9\w\-]+)\b/),
-      acText = message.match(/^!ac[ \t]+([0-9]{3})/);
+      acText = message.match(/^!ac[ \t]+([0-9]{3})/),
+      rollCall = message.match(/^bot\ roll\ call[!?]+$/i);
   if (rdioText) {
     rdioObject(rdioText[1]);
   } else if (acText) {
     acLookup(acText[1]); 
+  } else if (rollCall) {
+    client.say(myBot.channel, "Node.js extordinar! My source is here: http://j.mp/xuAQAS");
   }
 }
 
