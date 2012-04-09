@@ -45,7 +45,7 @@ function rdioObject(url) {
     } else if (result.type === 'p') { //Playlist
       newMessage += 'Playlist: "' + result.name + '"' + ' By: "' + result.owner + '"';
     } else if (result.type === 'r') { //Album
-      newMessage += 'Artist: "' + result.artist + '"'; 
+      newMessage += 'Artist: "' + result.name + '"'; 
     } else if (result.type === 's') { //Person 
       newMessage += 'Profile Name: "' + result.firstName + ' ' + result.lastName;
     } else {
