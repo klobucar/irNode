@@ -23,7 +23,7 @@ client.join(myBot.channel);
 
 function message_parsing(from, to, message) {
   var rdioText = message.match(/\bhttp\:\/\/rd\.io\/x\/([0-9\w\-]+)\b/),
-      acText = message.match(/^!ac[ \t]+([0-9]{3})/),
+      acText = message.match(/^!ac[ \t]+([0-9]{3})$/),
       rollCall = message.match(/^bot\ roll\ call[!?]+$/i);
   if (rdioText) {
     rdioObject(rdioText[1]);
