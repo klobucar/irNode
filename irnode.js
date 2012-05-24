@@ -68,7 +68,7 @@ function acLookup(areaCode) {
     if (!error && response.statusCode == 200) {
       var jsonResponse = JSON.parse(body),
         areaCode = jsonResponse.area_codes[0];
-      if (typeof(areaCode.state) != 'undefined') { 
+      if (typeof(areaCode) != 'undefined' && areaCode.state) { 
         newMessage += areaCode.state;
         client.say(myBot.channel, newMessage);
       }
