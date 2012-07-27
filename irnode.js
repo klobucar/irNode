@@ -20,6 +20,7 @@ var irc = require('irc'),
 var rdio = new Rdio([cred.RDIO_CONSUMER_KEY, cred.RDIO_CONSUMER_SECRET]);
 
 client.join(myBot.channel);
+client.on('error', function(e) { console.log('Error: ' + e ); })
 
 function message_parsing(from, to, message) {
   var rdioText = message.match(/\bhttp\:\/\/rd\.io\/x\/([0-9\w\-]+)\b/),
