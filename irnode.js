@@ -63,7 +63,7 @@ function acLookup(areaCode) {
     newMessage = 'Area Code is in: ',
     httpString = "http://www.allareacodes.com/api/1.0/api.json?";
   
-  httpString += qs 
+  httpString += qs; 
   request(httpString, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       var jsonResponse = JSON.parse(body),
