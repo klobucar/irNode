@@ -31,7 +31,7 @@ function message_parsing(from, to, message) {
   } else if (acText) {
     acLookup(acText[1]); 
   } else if (rollCall) {
-    client.say(myBot.channel, "Node.js extordinar! My source is here: http://j.mp/PN06GL");
+    client.say(myBot.channel, "Node.js extordinar! My source is here: j.mp/PN06GL");
   }
 }
 
