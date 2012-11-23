@@ -9,5 +9,6 @@ This requires you to install a few npm modules
 
 * irc
 * request
+* underscore
 
 Start with: `node irnode.js`
