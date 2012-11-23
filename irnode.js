@@ -1,8 +1,10 @@
 console.log('Starting irNode');
 
 var irc = require('irc'),
+    U = require('underscore'),
     request = require('request'),
     querystring = require('querystring'),
+    Echo = require('echonest')
     Rdio = require('./rdio'),
     cred = require('./rdio_cred'),
     myBot = {
@@ -18,6 +20,7 @@ var irc = require('irc'),
 
 
 var rdio = new Rdio([cred.RDIO_CONSUMER_KEY, cred.RDIO_CONSUMER_SECRET]);
+var echonest = new Echo.Echonest({ api_key: cred.ECHONEST_APIKEY});
 
 client.join(myBot.channel);
 client.on('error', function(e) { console.log('Error: ' + e ); })
@@ -25,13 +28,16 @@ client.on('error', function(e) { console.log('Error: ' + e ); })
 function message_parsing(from, to, message) {
   var rdioText = message.match(/\bhttp\:\/\/rd\.io\/x\/([0-9\w\-]+)\b/),
       acText = message.match(/^!ac[ \t]+([0-9]{3})$/),
-      rollCall = message.match(/^bot\ roll\ call[!?]*?$/i);
+      rollCall = message.match(/^bot\ roll\ call[!?]*?$/i),
+      similar = message.match(/^!similar\ ([^\r\n]*)/i);
   if (rdioText) {
     rdioObject(rdioText[1]);
   } else if (acText) {
     acLookup(acText[1]); 
   } else if (rollCall) {
     client.say(myBot.channel, "Node.js extordinar! My source is here: j.mp/PN06GL");
+  } else if (similar) {
+    echoSimilar(similar[1]);
   }
 }
 
@@ -48,7 +54,7 @@ function rdioObject(url) {
     } else if (result.type === 'r') { //Album
       newMessage += 'Artist: "' + result.name + '"'; 
     } else if (result.type === 's') { //Person 
-      newMessage += 'Profile Name: "' + result.firstName + ' ' + result.lastName;
+      newMessage += 'Profile Name: "' + result.firstName + ' ' + result.lastName + '"';
     } else {
       newMessage += 'Uknown Type: ' + result.type;
     }
@@ -76,6 +82,18 @@ function acLookup(areaCode) {
     }
   });
 }
+function echoSimilar(artistNames) {
+  var artistList = artistNames.split('&&');
+  echonest.artist.similar( 
+    {name: artistList, results: 5}, 
+    function(err, res) {
+      newMessage = 'Similar artists are: ("'+ U.pluck(res.artists, 'name').join('", "') + '")';
+      client.say(myBot.channel, newMessage);      
+    }
+  )
+ 
+}
+
 client.addListener('message', function(from, to, message){
   message_parsing(from, to, message);
 });
